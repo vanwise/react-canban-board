@@ -1,0 +1,36 @@
+$block: '.card-desc';
+
+#{$block} {
+  &__title {
+    font-weight: 800;
+    font-size: 18px;
+  }
+
+  &__input {
+    padding: 8px;
+    width: 100%;
+    font-size: 15px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background: var(--gray);
+    resize: none;
+    cursor: pointer;
+
+    &:focus {
+      border: 2px solid var(--blue);
+    }
+
+    &--fill {
+      padding: 10px 0;
+      background: transparent;
+    }
+
+    &--active {
+      margin: 0 0 5px;
+      padding: 10px;
+      height: 100px;
+      background: #fff;
+      cursor: text;
+    }
+  }
+}

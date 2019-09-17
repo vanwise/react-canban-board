@@ -1,0 +1,74 @@
+$block: '.big-card';
+
+#{$block} {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 5% 0;
+  width: 100%;
+  height: 100vh;
+  background: var(--black-opacity);
+  overflow: auto;
+
+  &__wrapper {
+    position: relative;
+    padding: 10px 20px 20px;
+    width: 600px;
+    border-radius: 10px;
+    background: var(--gray3);
+  }
+
+  &__title {
+    margin: 0 0 0 -2px;
+    padding: 8px 0;
+    width: calc(100% - 20px);
+    font-weight: 800;
+    font-size: 25px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    cursor: pointer;
+
+    &:focus {
+      padding: 8px;
+      border: 2px solid var(--blue);
+      background: #fff;
+      cursor: text;
+    }
+  }
+
+  &__column-title {
+    font-size: 16px;
+  }
+
+  &__author {
+    margin: 0 0 25px;
+    font-size: 13px;
+  }
+
+  &__desc {
+    margin: 0 0 10px;
+  }
+
+  &__comments {
+    margin: 0 0 10px;
+  }
+
+  &__close-btn {
+    position: absolute;
+    top: 20px;
+    right: 15px;
+  }
+
+  &__delete {
+    text-transform: uppercase;
+    text-decoration: underline;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}

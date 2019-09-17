@@ -1,0 +1,65 @@
+$block: '.comment';
+
+#{$block} {
+  &:not(:last-child) {
+    margin: 0 0 15px;
+  }
+
+  &:not(:first-child) {
+    padding-top: 10px;
+    border-top: 2px dashed var(--gray);
+  }
+
+  &__author {
+    margin: 0 0 5px;
+    font-weight: 800;
+  }
+
+  &__edit-wrapper {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 0 5px;
+    padding: 8px 10px 10px;
+    border: 1px solid var(--gray);
+    border-radius: 5px;
+    background: #fff;
+
+    &--active {
+      display: block;
+      padding-top: 9px;
+      box-shadow: 0 10px 10px -5px var(--gray4);
+
+      #{$block}__text-input {
+        position: static;
+        margin: 0 0 15px;
+        padding: 0;
+        width: 100%;
+        border: 0;
+        border-radius: 0;
+      }
+    }
+  }
+
+  &__text {
+    font-size: 15px;
+    cursor: default;
+  }
+
+  &__text-input {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    padding: 8px 10px 10px;
+    width: 5px;
+    font-size: 15px;
+    border: 1px solid var(--gray);
+    border-radius: 5px;
+    background: #fff;
+  }
+
+  &__btn {
+    text-transform: uppercase;
+  }
+}

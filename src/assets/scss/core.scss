@@ -1,0 +1,33 @@
+html {
+  min-width: $mobile;
+  text-align: left;
+  font-family: $font-family;
+  font-weight: $font-weight;
+  font-size: $font-size;
+  line-height: $line-height;
+  color: $font-color;
+  background: #fff;
+}
+
+body {
+  position: relative;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: auto;
+}
+
+input {
+  font-family: $font-family;
+}
+
+// style for hidden text
+.visually-hidden {
+  position: absolute !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+  white-space: nowrap !important;
+  clip-path: inset(100%) !important;
+  clip: rect(0 0 0 0) !important;
+  overflow: hidden !important;
+}

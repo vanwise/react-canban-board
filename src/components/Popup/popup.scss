@@ -1,0 +1,62 @@
+$block: '.popup';
+
+#{$block} {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--black-opacity);
+
+  &__inner {
+    padding: 30px 60px;
+    border: 1px solid var(--black);
+    border-radius: 20px;
+    background: #fff;
+  }
+
+  &__title {
+    margin: 0 0 20px;
+    font-weight: 800;
+    font-size: 40px;
+  }
+
+  &__label {
+    display: block;
+    margin: 0 0 10px;
+    font-size: 20px;
+  }
+
+  &__input {
+    display: block;
+    margin: 0 0 20px;
+    padding: 0 5px;
+    font-size: 20px;
+    border-radius: 20px;
+  }
+
+  &__btn {
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: var(--black-opacity);
+    font-weight: 800;
+    font-size: 20px;
+    color: #fff;
+    border: 1px solid var(--black);
+    text-transform: uppercase;
+
+    &:disabled {
+      opacity: 0.2;
+      cursor: default;
+    }
+
+    &:not(:disabled) {
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+}
