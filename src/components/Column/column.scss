@@ -29,16 +29,4 @@ $block: '.column';
   &__list {
     margin: 0 0 10px;
   }
-
-  &__btn {
-    padding: 0 5px;
-    color: var(--gray2);
-    font-size: 15px;
-
-    &::before {
-      content: '+';
-      margin: 0 5px 0 0;
-      font-size: 20px;
-    }
-  }
 }

@@ -1,49 +1,63 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './add-card.scss';
-import EditText from '../EditText/EditText';
+import TextForm from '../TextForm/TextForm';
 
-class AddCard extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      enteredTitle: ''
-    }
-    this.titleInput = React.createRef();
+class AddCard extends Component {
+  static propTypes = {
+    toggleAddCardVisability: PropTypes.func.isRequired,
+    addNewCard: PropTypes.func.isRequired,
+    isOpen: PropTypes.bool.isRequired
   }
 
-  componentDidUpdate () {
-    if (this.props.isAddCardOpened && !this.props.isTitleEdited) {
-      this.titleInput.current.focus();
-    }
+  componentDidMount () {
+    window.addEventListener('click', this.handleWindowClick);
   }
   
-  onAddBtnClick () {
-    if (this.state.enteredTitle) {
-      this.props.addNewCard(this.props.columnId, this.state.enteredTitle);
-      this.setState({enteredTitle: ''});
+  componentWillUnmount () {
+    window.removeEventListener('click', this.handleWindowClick);
+  }
+  
+  handleWindowClick = () => {
+    const { toggleAddCardVisability, isOpen } = this.props;
+
+    if (isOpen) {
+      toggleAddCardVisability();
     }
   }
 
-  onCloseBtnClick () {
-    this.props.toggleAddCardVisibility(this.props.columnId);
-    this.setState({enteredTitle: ''});
+  handleSaveBtnClick = (value) => {
+    if (value) {
+      this.props.addNewCard(value);
+    }
   }
 
   render() {
-    return this.props.isAddCardOpened && (
-      <div className="add-card">
-        <textarea 
-          className="add-card__textarea"
-          ref={this.titleInput}
-          placeholder="Введите заголовок для этой карточки"
-          value={this.state.enteredTitle}
-          onChange={e => this.setState({enteredTitle: e.target.value})}
-        />
-        <EditText
-          title="Добавить карточку"
-          onAddBtnClick={() => this.onAddBtnClick()}
-          onCloseBtnClick={() => this.onCloseBtnClick()}
-        />
+    const { toggleAddCardVisability, isOpen } = this.props;
+
+    return (
+      <div 
+        className="add-card"
+        onClick={e => e.stopPropagation()}
+      >
+        {!isOpen
+          ?
+            <button 
+              className="add-card__btn"
+              onClick={toggleAddCardVisability}
+            >
+              Добавить еще одну карточку
+            </button>
+          :
+            <TextForm
+              fieldClassName="add-card__input"
+              saveBtnTitle="Добавить карточку"
+              placeholder="Введите заголовок для этой карточки"
+              onSaveBtnClick={this.handleSaveBtnClick}
+              onCloseBtnClick={toggleAddCardVisability}
+              isDoneEditingFromEnter={true}
+            />
+        }
       </div>
     )
   }

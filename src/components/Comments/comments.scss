@@ -9,30 +9,32 @@ $block: '.comments';
 
   &__wrapper {
     margin: 0 0 25px;
-    max-height: 36px;
     background: #fff;
     border: 1px solid var(--gray);
     border-radius: 5px;
     overflow: hidden;
 
     &--active {
-      padding: 8px 10px;
-      max-height: 1000px;
+      padding: 8px 10px 10px;
       box-shadow: 0 10px 10px -5px var(--gray4);
-
-      #{$block}__input {
-        padding: 0;
-        cursor: text;
-      }
     }
   }
 
-  &__input {
-    margin: 0 0 20px;
+  &__btn {
     padding: 8px 10px 10px;
     width: 100%;
+    text-align: left;
+    font-family: Gilroy;
+    font-size: 16px;
+  }
+
+  &__input {
+    padding: 0;
+    height: 25px;
     border: 0;
-    font-size: 15px;
-    cursor: pointer;
+
+    &:focus {
+      border: 0;
+    }
   }
 }

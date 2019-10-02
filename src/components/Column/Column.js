@@ -1,77 +1,64 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './column.scss';
+import TitleInput from '../TitleInput/TitleInput';
 import Card from '../Card/Card';
 import AddCard from '../AddCard/AddCard';
 
-class Column extends React.Component {
-  state = {
-    idEditedBy: false
+class Column extends Component {
+  static propTypes = {
+    toggleAddCardVisability: PropTypes.func.isRequired,
+    changeColumnTitle: PropTypes.func.isRequired,
+    isAddCardOpen: PropTypes.bool.isRequired,
+    onCardClick: PropTypes.func.isRequired,
+    addNewCard: PropTypes.func.isRequired,
+    title: PropTypes.string,
+    comments: PropTypes.array,
+    cards: PropTypes.array
   }
-
-  onTitleInputClick (e) {
-    this.setState({isEditedBy: true});
-    e.target.select();
-  }
-
-  onTitleInputBlur () {
-    this.setState({isEditedBy: false});
-  }
-
-  onAddCardBtnClick () {
-    this.props.toggleAddCardVisibility(this.props.columnId);
-  }
-
-  onTitleInputKeyDown (e) {
-    const code = e.keyCode;
-
-    if (code === 27 || code === 13) {
-      e.target.blur();
-    }
+  static defaultProps = {
+    title: 'Неизвестная колонка',
+    comments: [],
+    cards: []
   }
 
   render () {
-    const itemsLength = this.props.column.items ? this.props.column.items.length : 0;
+    const {
+      title,
+      cards,
+      onCardClick,
+      addNewCard,
+      changeColumnTitle,
+      comments,
+      isAddCardOpen,
+      toggleAddCardVisability
+    } = this.props;
 
     return (
       <li className="column">
-        <input 
+        <TitleInput
           className="column__title"
-          defaultValue={this.props.column.title}
-          onClick={e => this.onTitleInputClick(e)}
-          onChange={e => this.props.changeColumnTitle(this.props.columnId, e.target.value)}
-          onBlur={() => this.onTitleInputBlur()}
-          onKeyDown={e => this.onTitleInputKeyDown(e)}
+          defaultValue={title}
+          onBlur={changeColumnTitle}
         />
-        {itemsLength > 0 &&
+        {cards.length > 0 &&
           <ul className="column__list">
-            {this.props.column.items.map(card => {
+            {cards.map(({ id, title }) => {
               return (
                 <Card
-                  key={card.title}
-                  columnId={this.props.columnId}
-                  cardId={card.id}
-                  title={card.title}
-                  commentsCount={card.comments ? card.comments.length : null}
-                  visibleDataByCardId={this.props.visibleDataByCardId}
+                  key={id}
+                  title={title}
+                  commentsLength={comments.filter(item => item.cardId === id).length}
+                  onClick={() => onCardClick(id)}
                 />
               )
             })}
           </ul>
         }
-        {!this.props.isAddCardOpened &&
-          <button 
-            className="column__btn"
-            onClick={this.onAddCardBtnClick.bind(this)}
-          >
-            Добавить еще одну карточку
-          </button>
-        }
         <AddCard 
-          isAddCardOpened={this.props.isAddCardOpened}
-          toggleAddCardVisibility={this.props.toggleAddCardVisibility}
-          columnId={this.props.columnId}
-          addNewCard={this.props.addNewCard}
-          isTitleEdited={this.state.isEditedBy}
+          isOpen={isAddCardOpen}
+          toggleAddCardVisability={toggleAddCardVisability}
+          addNewCard={addNewCard}
         />
       </li>
     )

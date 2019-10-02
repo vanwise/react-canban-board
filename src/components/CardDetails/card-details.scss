@@ -1,25 +1,11 @@
-$block: '.big-card';
+$block: '.card-details';
 
 #{$block} {
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 5% 0;
-  width: 100%;
-  height: 100vh;
-  background: var(--black-opacity);
-  overflow: auto;
-
-  &__wrapper {
-    position: relative;
-    padding: 10px 20px 20px;
-    width: 600px;
-    border-radius: 10px;
-    background: var(--gray3);
-  }
+  position: relative;
+  padding: 10px 20px 20px;
+  width: 600px;
+  border-radius: 10px;
+  background: var(--gray3);
 
   &__title {
     margin: 0 0 0 -2px;

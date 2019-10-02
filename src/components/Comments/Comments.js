@@ -1,82 +1,89 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './comments.scss';
+import PropTypes from 'prop-types';
 import Comment from '../Comment/Comment';
-import EditText from '../EditText/EditText';
+import TextForm from '../TextForm/TextForm';
 
-class Comments extends React.Component {
+class Comments extends Component {
+  static propTypes = {
+    changeComment: PropTypes.func.isRequired,
+    addNewComment: PropTypes.func.isRequired,
+    customClass: PropTypes.string,
+    comments: PropTypes.array
+  }
+  static defaultProps = {
+    customClass: '',
+    comments: []
+  }
   state = {
-    isCommentWritten: false,
-    enteredText: ''
+    isCommentWritten: false
   }
 
-  onInputClick () {
-    if (!this.state.isCommentWritten) {
-      this.setState({isCommentWritten: true});
+  handleAddCommentBtnClick = (value) => {
+    if (value) {
+      this.props.addNewComment(value);
     }
+    
+    this.setState({isCommentWritten: false});
   }
 
-  onAddBtnClick () {
-    const { columnId } = this.props.currentVisibleData;
-    const { id } = this.props.currentVisibleData.card;
-
-    this.props.addNewComment(columnId, id, this.state.enteredText);
-    this.onCloseBtnClick();
-  }
-
-  onCloseBtnClick () {
-    this.setState({
-      isCommentWritten: false,
-      enteredText: ''
-    });
-  }
-
-  closeWriteNewComment () {
-    if (this.state.isCommentWritten && !this.state.enteredText) {
-      this.onCloseBtnClick();
+  closeWriteNewComment = () => {
+    if (this.state.isCommentWritten) {
+      this.setState({isCommentWritten: false});
     }
   }
 
   render() {
+    const {
+      customClass,
+      changeComment,
+      comments
+    } = this.props;
+    const { isCommentWritten } = this.state;
+    const PLACEHOLDER = 'Напишите комментарий...';
+
     return (
-      <div 
-        className={`comments ${this.props.customClass ? this.props.customClass : ''}`}
-      >
+      <div className={`comments ${customClass}`}>
         <div 
           className={`
             comments__wrapper 
-            ${this.state.isCommentWritten ? 'comments__wrapper--active' : ''}
+            ${isCommentWritten ? 'comments__wrapper--active' : ''}
           `}
         >
-          <input
-            className="comments__input"
-            type="text"
-            placeholder="Напишите комментарий..."
-            value={this.state.enteredText}
-            onClick={() => this.onInputClick()}
-            onChange={e => this.setState({enteredText: e.target.value})}
-          />
-          <EditText
-            title="Сохранить"
-            isDisabled={this.state.enteredText ? false : true}
-            onAddBtnClick={() => this.onAddBtnClick()}
-            onCloseBtnClick={() => this.onCloseBtnClick()}
-          />
-        </div>
-        <ul className="comments__list">
-          {[...this.props.comments].reverse().map(({ id, author, text }) => {
-            return (
-              <Comment
-                key={id}
-                commentId={id}
-                author={author}
-                text={text}
-                currentVisibleData={this.props.currentVisibleData}
-                changeComment={this.props.changeComment}
-                closeWriteNewComment={() => this.closeWriteNewComment()}
+          {!isCommentWritten
+            ?
+              <button
+                className="comments__btn"
+                onClick={() => this.setState({isCommentWritten: true})}
+              >
+                {PLACEHOLDER}
+              </button>
+            :
+              <TextForm
+                fieldClassName="comments__input"
+                placeholder={PLACEHOLDER}
+                saveBtnTitle="Сохранить"
+                onSaveBtnClick={this.handleAddCommentBtnClick}
+                onCloseBtnClick={() => this.setState({isCommentWritten: false})}
+                isDynamicTextareaHeight={true}
               />
-            )
-          })}
-        </ul>
+          }
+        </div>
+        {comments.length > 0 &&
+          <ul className="comments__list">
+            {[...comments].reverse().map(({ id, author, text }) => {
+              return (
+                <Comment
+                  key={id}
+                  author={author}
+                  text={text}
+                  closeWriteNewComment={this.closeWriteNewComment}
+                  changeComment={(isDelete, value) => changeComment(id, isDelete, value)}
+                />
+              )
+            })}
+          </ul>
+        }
       </div>
     )
   }

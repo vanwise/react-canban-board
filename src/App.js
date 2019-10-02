@@ -1,208 +1,188 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './app.scss';
-import Column from './components/Column/Column'
-import Popup from './components/Popup/Popup';
-import BigCard from './components/BigCard/BigCard'
+import DEFAULT_DATA from './utils/defaultData';
+import getRandomID from './utils/getRandomId';
+import Modal from './components/Modal/Modal'
+import Column from './components/Column/Column';
+import UserForm from './components/UserForm/UserForm';
+import CardDetails from './components/CardDetails/CardDetails';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userName: localStorage.getItem('userName'),
-      columnWithAddCardOpened: null,
-      isBigCardOpened: false,
-      currentVisibleData: null,
-      columns: JSON.parse(`${localStorage.getItem('columns')}`) || [
-        {
-          id: 'todo',
-          title: 'TODO',
-        },
-        {
-          id:'in-progress',
-          title: 'In progress'
-        },
-        {
-          id:'testing',
-          title: 'Testing'
-        },
-        {
-          id: 'done',
-          title: 'Done'
-        }
-      ]
+class App extends Component {
+  state = {
+    userName: localStorage.getItem('userName'),
+    columnWithOpenAddCard: null,
+    visibleCardId: null,
+    columns: this.initData('columns'),
+    cards: this.initData('cards'),
+    comments: this.initData('comments')
+  }
+  
+  initData (title) {
+    const incomingData = JSON.parse(`${localStorage.getItem(title)}`);
+    let data;
+
+    if (incomingData) {
+      data = incomingData;
+    } else {
+      localStorage.setItem(title, JSON.stringify(DEFAULT_DATA[title] || []));
+      data = DEFAULT_DATA[title] || [];
     }
+
+    return data;
   }
 
-  setData (data) {
-    localStorage.setItem('columns', JSON.stringify(data));
-    this.setState({columns: data});
+  setData (data, title) {
+    this.setState({[title]: data});
+    localStorage.setItem(title, JSON.stringify(data));
   }
 
-  changeColumnTitle (columnId, value) {
-    const currColumnIndex = this.state.columns.findIndex(item => item.id === columnId);
-    const cloneColumnsArray = [...this.state.columns];
+  setUserName = (name) => {
+    this.setState({userName: name});
+    localStorage.setItem('userName', name);
+  }
+
+  changeColumnTitle = (columnId, value) => {
+    const { columns } = this.state;
+    const currColumnIndex = columns.findIndex(item => item.id === columnId);
+    const cloneColumnsArray = [...columns];
 
     cloneColumnsArray[currColumnIndex].title = value;
-    this.setData(cloneColumnsArray);
+    this.setData(cloneColumnsArray, 'columns');
   }
 
-  addNewCard (columnId, value) {
-    const currColumnIndex = this.state.columns.findIndex(item => item.id === columnId);
-    const cloneColumnsArray = [...this.state.columns];
-    const newCard = {
-      id: Math.floor(Math.random().toFixed(5) * 100000),
-      title: value,
-      author: this.state.userName,
-      desc: '',
-      comments: []
-    };
-
-    if (!cloneColumnsArray[currColumnIndex].items) {
-      cloneColumnsArray[currColumnIndex].items = [];
-    }
-    
-    cloneColumnsArray[currColumnIndex].items.push(newCard);
-    this.setData(cloneColumnsArray);    
-  }
-
-  toggleBigCardVisibiliy () {
-    this.setState({isBigCardOpened: !this.state.isBigCardOpened});
-  }
-
-  visibleDataByCardId (columnId, cardId) {
-    const currColumnIndex = this.state.columns.findIndex(item => item.id === columnId);
-    let currentData = {};
-
-    currentData.columnId = this.state.columns[currColumnIndex].id;
-    currentData.columnTitle = this.state.columns[currColumnIndex].title;
-    currentData.card = this.state.columns[currColumnIndex].items.find(card => card.id === cardId);
-
-    this.toggleBigCardVisibiliy();
+  toggleAddCardVisability = (id) => {
     this.setState({
-      columnWithAddCardOpened: null,
-      currentVisibleData: currentData,
-    });
+      columnWithOpenAddCard:
+        this.state.columnWithOpenAddCard === id ? null : id
+    })
   }
 
-  getCardIndexById (columnId, cardId) {
-    const currColumnIndex = this.state.columns.findIndex(item => item.id === columnId);
-
-    return {
-      column: currColumnIndex,
-      card: this.state.columns[currColumnIndex].items.findIndex(item => item.id === cardId)
-    }
+  addNewCard = (columnId, value) => {
+    const { cards, userName } = this.state;
+    const cloneCardsArray = [...cards];
+    const newCard = {
+      id: getRandomID(),
+      columnId: columnId,
+      title: value,
+      author: userName,
+      desc: ''
+    };
+    
+    cloneCardsArray.push(newCard);
+    this.setData(cloneCardsArray, 'cards');
   }
 
-  changeCardProp (columnId, cardId, desiredProp, value) {
-    const cardIndexById = this.getCardIndexById(columnId, cardId);
-    const cloneColumnsArray = [...this.state.columns];
-
-    cloneColumnsArray[cardIndexById.column].items[cardIndexById.card][desiredProp] = value;
-    this.setData(cloneColumnsArray);
+  handleCardDetailsClose = () => {
+    this.setState({visibleCardId: null});
   }
 
-  changeCardDesc (columnId, cardId, value) {
-    this.changeCardProp(columnId, cardId, 'desc', value);
+  changeCardProp = (desiredProp, value) => {
+    const { cards, visibleCardId } = this.state;
+    const cloneCardsArray = [...cards];
+    const currentCardIndex = cloneCardsArray.findIndex(item => item.id === visibleCardId);
+
+    cloneCardsArray[currentCardIndex][desiredProp] = value;
+    this.setData(cloneCardsArray, 'cards');
   }
 
-  changeCardTitle (columnId, cardId, value) {
-    this.changeCardProp(columnId, cardId, 'title', value);
-  }
-
-  addNewComment (columnId, cardId, value) {
-    const cardIndexById = this.getCardIndexById(columnId, cardId);
-    const cloneColumnsArray = [...this.state.columns];
+  addNewComment = (value) => {
+    const {
+      comments,
+      userName,
+      visibleCardId
+    } = this.state;
+    const cloneCommentsArray = [...comments];
     const newComment = {
-      id: Math.floor(Math.random().toFixed(5) * 100000),
-      author: this.state.userName,
+      id: getRandomID(),
+      cardId: visibleCardId,
+      author: userName,
       text: value
     };
 
-    cloneColumnsArray[cardIndexById.column].items[cardIndexById.card].comments.push(newComment);
-    this.setData(cloneColumnsArray);
+    cloneCommentsArray.push(newComment);
+    this.setData(cloneCommentsArray, 'comments');
   }
 
-  changeComment (columnId, cardId, commentId, isDeleted=true, value=null) {
-    const cardIndexById = this.getCardIndexById(columnId, cardId);
-    const cloneColumnsArray = [...this.state.columns];
-    const currentCommentIndex =
-      cloneColumnsArray[cardIndexById.column]
-        .items[cardIndexById.card]
-        .comments
-        .findIndex(item => item.id === commentId);
+  changeComment = (commentId, isDelete=true, value=null) => {
+    const { comments } = this.state;
+    const cloneCommentsArray = [...comments];
+    const currentCommentIndex = comments.findIndex(item => item.id === commentId);
     
-    if (isDeleted) {
-      cloneColumnsArray[cardIndexById.column]
-        .items[cardIndexById.card]
-        .comments
-        .splice(currentCommentIndex, 1);
+    if (isDelete) {
+      cloneCommentsArray.splice(currentCommentIndex, 1);
     } else {
-      cloneColumnsArray[cardIndexById.column]
-        .items[cardIndexById.card]
-        .comments[currentCommentIndex]
-        .text = value;
+      cloneCommentsArray[currentCommentIndex].text = value;
     }
 
-    this.setData(cloneColumnsArray);
+    this.setData(cloneCommentsArray, 'comments');
   }
 
-  deleteCard (columnId, cardId) {
-    const cardIndexById = this.getCardIndexById(columnId, cardId);
-    const cloneColumnsArray = [...this.state.columns];
+  handleCardDeleteClick = () => {
+    const { cards, visibleCardId } = this.state;
+    const cloneCardsArray = [...cards];
+    const currentCardIndex = cloneCardsArray.findIndex(item => item.id === visibleCardId);
 
-    cloneColumnsArray[cardIndexById.column].items.splice(cardIndexById.card, 1);
-    this.setState({
-      isBigCardOpened: false,
-      currentVisibleData: null
-    });
-    this.setData(cloneColumnsArray);
+    cloneCardsArray.splice(currentCardIndex, 1);
+    this.setState({visibleCardId: null});
+    this.setData(cloneCardsArray, 'cards');
   }
 
   render () {
+    const {
+      cards,
+      columns,
+      comments,
+      userName,
+      visibleCardId,
+      columnWithOpenAddCard
+    } = this.state;
+    const currentCard = cards.find(item => item.id === visibleCardId) || {};
+    const currentCardColumn = columns.find(item => item.id === currentCard.columnId) || {};
+
     return (
       <section className="app">
         <h1 className="app__title">
           Доска с карточками
         </h1>
-        {this.state.columns &&
+        {columns &&
           <ul className="app__list">
-            {this.state.columns.map(column => {
+            {columns.map(({ id, title }) => {
               return(
                 <Column
-                  key={column.id}
-                  columnId={column.id}
-                  column={column}
-                  isAddCardOpened={
-                    this.state.columnWithAddCardOpened === column.id ? true : false
-                  }
-                  toggleAddCardVisibility={columnId => this.setState({
-                    columnWithAddCardOpened: 
-                    columnId === this.state.columnWithAddCardOpened ? null : columnId
-                  })}
-                  changeColumnTitle={this.changeColumnTitle.bind(this)}
-                  addNewCard={this.addNewCard.bind(this)}
-                  visibleDataByCardId={this.visibleDataByCardId.bind(this)}
+                  key={id}
+                  title={title}
+                  comments={comments}
+                  isAddCardOpen={columnWithOpenAddCard === id}
+                  toggleAddCardVisability={() => this.toggleAddCardVisability(id)}
+                  cards={cards.filter(item => item.columnId === id)}
+                  changeColumnTitle={value => this.changeColumnTitle(id, value)}
+                  addNewCard={value => this.addNewCard(id, value)}
+                  onCardClick={id => this.setState({visibleCardId: id})}
                 />
               )
             })}
           </ul>
         }
-        <Popup
-          userName={this.state.userName}
-          setUserName={name => this.setState({userName: name})}
-        />
-        {this.state.currentVisibleData &&
-          <BigCard
-            isBigCardOpened={this.state.isBigCardOpened}
-            toggleBigCardVisibiliy={this.toggleBigCardVisibiliy.bind(this)}
-            currentVisibleData={this.state.currentVisibleData}
-            changeCardDesc={this.changeCardDesc.bind(this)}
-            changeCardTitle={this.changeCardTitle.bind(this)}
-            addNewComment={this.addNewComment.bind(this)}
-            changeComment={this.changeComment.bind(this)}
-            deleteCard={this.deleteCard.bind(this)}
+        <Modal isOpen={!userName}>
+          <UserForm setUserName={this.setUserName} />
+        </Modal>
+        <Modal
+          isOpen={!!visibleCardId}
+          onOverlayClick={this.handleCardDetailsClose}
+        >
+          <CardDetails
+            title={currentCard.title}
+            author={currentCard.author}
+            desc={currentCard.desc}
+            columnTitle={currentCardColumn.title}
+            comments={comments.filter(item => item.cardId === currentCard.id)}
+            onCloseBtnClick={this.handleCardDetailsClose}
+            changeCardProp={this.changeCardProp}
+            addNewComment={this.addNewComment}
+            changeComment={this.changeComment}
+            onCardDeleteClick={this.handleCardDeleteClick}
           />
-        }
+        </Modal>
       </section>
     )
   }

@@ -1,30 +1,32 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './card.scss';
 
 function Card ({
-    columnId,
-    cardId,
-    title,
-    commentsCount,
-    visibleDataByCardId
+    commentsLength=0,
+    onClick,
+    title
   }) {
-  function onCardClick () {
-    visibleDataByCardId(columnId, cardId)
-  }
 
   return (
     <li 
       className="card"
-      onClick={() => onCardClick()}
+      onClick={onClick}
     >
       <h3 className="card__title">
         {title}
       </h3>
       <span className="card__comments-count">
-        {commentsCount}
+        {commentsLength}
       </span>
     </li>
   )
+}
+
+Card.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  commentsLength: PropTypes.number
 }
 
 export default Card;
