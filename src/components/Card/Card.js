@@ -11,7 +11,7 @@ function Card ({
   return (
     <li 
       className="card"
-      onClick={onClick}
+      onClick={() => onClick()}
     >
       <h3 className="card__title">
         {title}

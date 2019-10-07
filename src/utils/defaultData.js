@@ -16,6 +16,23 @@ const DEFAULT_DATA = {
       id: 'done',
       title: 'Done'
     }
+  ],
+  cards: [
+    {
+      id: 123,
+      columnId: 'testing',
+      author: 'Admin',
+      title: 'Карточка',
+      desc: 'Пример карточки'
+    }
+  ],
+  comments: [
+    {
+      id: 123,
+      cardId: 123,
+      author: 'Admin',
+      text: 'Hello world'
+    }
   ]
 }
 

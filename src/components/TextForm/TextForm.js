@@ -1,40 +1,20 @@
 import React, { Component } from 'react';
-import './text-form.scss';
 import PropTypes from 'prop-types';
+import './text-form.scss';
+import classNames from 'classnames';
 import CloseBtn from '../CloseBtn/CloseBtn';
 import KEY_CODES from '../../utils/keyCodes';
 
 class TextForm extends Component  {
-  static propTypes = {
-    onSaveBtnClick: PropTypes.func.isRequired,
-    onCloseBtnClick: PropTypes.func.isRequired,
-    customClass: PropTypes.string,
-    fieldClassName: PropTypes.string,
-    defaultText: PropTypes.string,
-    saveBtnTitle: PropTypes.string,
-    placeholder: PropTypes.string,
-    isDoneEditingFromEnter: PropTypes.bool,
-    isDynamicTextareaHeight: PropTypes.bool
-  }
-  static defaultProps = {
-    customClass: '',
-    fieldClassName: '',
-    defaultText: '',
-    saveBtnTitle: 'Кнопка',
-    placeholder: 'Введите текст',
-    isDoneEditingFromEnter: false,
-    isDynamicTextareaHeight: false
+  componentDidMount () {
+    this.setTextareaHeight();
+    this.textarea.current.select();
   }
   state = {
     enteredText: this.props.defaultText,
   }
 
   textarea = React.createRef();
-
-  componentDidMount () {
-    this.setTextareaHeight();
-    this.textarea.current.select();
-  }
 
   handleFormSubmit = (e) => {
     const { defaultText, onSaveBtnClick } = this.props;
@@ -83,14 +63,14 @@ class TextForm extends Component  {
     } = this.props;
 
     return (
-      <div className={`text-form ${customClass}`}>
+      <div className={classNames('text-form', customClass)}>
         <form
           action="#"
           method="post"
           onSubmit={this.handleFormSubmit}
         >
           <textarea
-            className={`text-form__field ${fieldClassName}`}
+            className={classNames('text-form__field', fieldClassName)}
             ref={this.textarea}
             placeholder={placeholder}
             value={this.state.enteredText}
@@ -108,6 +88,28 @@ class TextForm extends Component  {
       </div>
     )
   }
+}
+
+TextForm.propTypes = {
+  onSaveBtnClick: PropTypes.func.isRequired,
+  onCloseBtnClick: PropTypes.func.isRequired,
+  customClass: PropTypes.string,
+  fieldClassName: PropTypes.string,
+  defaultText: PropTypes.string,
+  saveBtnTitle: PropTypes.string,
+  placeholder: PropTypes.string,
+  isDoneEditingFromEnter: PropTypes.bool,
+  isDynamicTextareaHeight: PropTypes.bool
+}
+
+TextForm.defaultProps = {
+  customClass: '',
+  fieldClassName: '',
+  defaultText: '',
+  saveBtnTitle: 'Кнопка',
+  placeholder: 'Введите текст',
+  isDoneEditingFromEnter: false,
+  isDynamicTextareaHeight: false
 }
 
 export default TextForm;

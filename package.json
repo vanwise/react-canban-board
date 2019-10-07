@@ -15,6 +15,7 @@
     "bootstrap": "^4.3.1",
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "classnames": "^2.2.6",
     "css-loader": "2.1.1",
     "dotenv": "6.2.0",
     "dotenv-expand": "4.2.0",
@@ -49,6 +50,7 @@
     "react-app-polyfill": "^1.0.2",
     "react-dev-utils": "^9.0.3",
     "react-dom": "^16.9.0",
+    "react-redux": "^7.1.1",
     "resolve": "1.12.0",
     "resolve-url-loader": "3.1.0",
     "sass-loader": "7.2.0",
@@ -134,5 +136,9 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0"
   }
 }

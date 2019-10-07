@@ -1,8 +1,8 @@
 import React from 'react';
-import './modal.scss';
+import './popup.scss';
 import PropTypes from 'prop-types';
 
-function Modal ({
+function Popup ({
   isOpen,
   children,
   onOverlayClick=()=>{}
@@ -13,11 +13,11 @@ function Modal ({
 
   return (
     <div 
-      className="modal"
-      onClick={onOverlayClick}
+      className="popup"
+      onClick={() => onOverlayClick()}
     >
       <div
-        className="modal__inner"
+        className="popup__inner"
         onClick={e => e.stopPropagation()}
         onKeyDown={e => e.stopPropagation()}
       >
@@ -27,10 +27,10 @@ function Modal ({
   )
 }
 
-Modal.propTypes = {
+Popup.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   children: PropTypes.node,
   onOverlayClick: PropTypes.func
 }
 
-export default Modal;
+export default Popup;

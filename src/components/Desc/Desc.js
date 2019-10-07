@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './desc.scss';
+import classNames from 'classnames';
 import TextForm from '../TextForm/TextForm';
 
 class CardDesc extends Component {
-  static propTypes = {
-    editText: PropTypes.func.isRequired,
-    customClass: PropTypes.string,
-    text: PropTypes.string
-  }
-  static defaultProps = {
-    customClass: '',
-    text: ''
-  }
   state = {
     isEditedBy: false
   }
@@ -28,14 +20,17 @@ class CardDesc extends Component {
     const PLACEHOLDER = 'Добавить полное описание карточки...';
     
     return (
-      <section className={`desc ${customClass}`}>
+      <section className={classNames('desc', customClass)}>
         <h3 className="desc__title">
           Описание
         </h3>
         {!isEditedBy
           ?
             <pre
-              className={`desc__text ${text ? 'desc__text--fill' : ''}`}
+              className={classNames(
+                'desc__text',
+                {'desc__text--fill': text}
+              )}
               onClick={() => this.setState({isEditedBy: true})}
             >
               {text || PLACEHOLDER}
@@ -53,6 +48,17 @@ class CardDesc extends Component {
       </section>
     )
   }
+}
+
+CardDesc.propTypes = {
+  editText: PropTypes.func.isRequired,
+  customClass: PropTypes.string,
+  text: PropTypes.string
+}
+
+CardDesc.defaultProps = {
+  customClass: '',
+  text: ''
 }
 
 export default CardDesc;

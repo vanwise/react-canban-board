@@ -1,5 +1,6 @@
 import React from 'react';
 import './close-btn.scss';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 function CloseBtn ({
@@ -9,10 +10,10 @@ function CloseBtn ({
 }) {
   return (
     <button 
-      className={`close-btn ${customClass}`}
+      className={classNames('close-btn', customClass)}
       title={title}
       type="button"
-      onClick={onClick}
+      onClick={() => onClick()}
     />
   )
 }

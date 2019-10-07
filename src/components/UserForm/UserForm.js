@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import './user-form.scss';
 import PropTypes from 'prop-types';
 
-class Popup extends Component {
-  static propTypes = {
-    setUserName: PropTypes.func.isRequired
-  }
+class UserForm extends Component {
   state = {
     enteredText: ''
   }
@@ -53,4 +50,8 @@ class Popup extends Component {
   }
 }
 
-export default Popup;
+UserForm.propTypes = {
+  setUserName: PropTypes.func.isRequired
+}
+
+export default UserForm;

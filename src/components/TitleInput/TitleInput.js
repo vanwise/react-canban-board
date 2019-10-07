@@ -3,14 +3,6 @@ import PropTypes from 'prop-types';
 import KEY_CODES from '../../utils/keyCodes'
 
 class TitleInput extends Component {
-  static propTypes = {
-    defaultValue: PropTypes.string.isRequired,
-    onBlur: PropTypes.func.isRequired,
-    className: PropTypes.string
-  }
-  static defaultProps = {
-    className: ''
-  }
   state = {
     enterdText: this.props.defaultValue
   }
@@ -19,15 +11,13 @@ class TitleInput extends Component {
     const { onBlur, defaultValue } = this.props;
     const text = this.state.enterdText.trim() || defaultValue;
 
-    onBlur(text);
     this.setState({enterdText: text});
+    onBlur(text);
   }
 
   handleKeyDown = (e) => {
-    const { keyCode, target } = e;
-
-    if (KEY_CODES.endOfTitleEditing.includes(keyCode)) {
-      target.blur();
+    if (KEY_CODES.endOfTitleEditing.includes(e.keyCode)) {
+      e.target.blur();
     }
   }
 
@@ -43,6 +33,16 @@ class TitleInput extends Component {
       />
     )
   }
+}
+
+TitleInput.propTypes = {
+  defaultValue: PropTypes.string.isRequired,
+  onBlur: PropTypes.func.isRequired,
+  className: PropTypes.string
+}
+
+TitleInput.defaultProps = {
+  className: ''
 }
 
 export default TitleInput;

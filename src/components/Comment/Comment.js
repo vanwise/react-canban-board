@@ -1,25 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import './comment.scss';
+import classNames from 'classnames';
 import TextForm from '../TextForm/TextForm';
 
 class Comment extends Component {
-  static propTypes = {
-    changeComment: PropTypes.func.isRequired,
-    author: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
-    closeWriteNewComment: PropTypes.func,
-  }
-  static defaultProp = {
-    closeWriteNewComment: ()=>{}
-  }
   state = {
     isEditedBy: false
   }
 
   handleSaveBtnClick = (value) => {
     if (value) {
-      this.props.changeComment(false, value);
+      this.props.changeComment(value);
     }
 
     this.setState({isEditedBy: false});
@@ -34,7 +27,8 @@ class Comment extends Component {
     const {
       text,
       author,
-      changeComment
+      removeComment,
+      userName
     } = this.props;
     const { isEditedBy } = this.state;
 
@@ -44,10 +38,10 @@ class Comment extends Component {
           {author}
         </p>
         <div 
-          className={`
-            comment__edit-wrapper 
-            ${isEditedBy ? 'comment__edit-wrapper--active' : ''}
-          `}
+          className={classNames(
+            'comment__edit-wrapper',
+            {'comment__edit-wrapper--active': isEditedBy}
+          )}
         >
           {!isEditedBy
             ?
@@ -65,7 +59,7 @@ class Comment extends Component {
               />
           }
         </div>
-        {author === window.localStorage.getItem('userName') &&
+        {author === userName &&
           <div className="comment__wrapper">
             <button
               className="comment__btn"
@@ -76,7 +70,7 @@ class Comment extends Component {
             <span> / </span>
             <button
               className="comment__btn"
-              onClick={changeComment}
+              onClick={() => removeComment()}
             >
               Удалить
             </button>
@@ -87,4 +81,21 @@ class Comment extends Component {
   }
 }
 
-export default Comment;
+Comment.propTypes = {
+  changeComment: PropTypes.func.isRequired,
+  removeComment: PropTypes.func.isRequired,
+  author: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  closeWriteNewComment: PropTypes.func,
+  userName: PropTypes.string.isRequired
+};
+
+Comment.defaultProp = {
+  closeWriteNewComment: ()=>{}
+};
+
+const mapStateToProps = state => ({
+  userName: state.user.name
+});
+
+export default connect(mapStateToProps)(Comment);

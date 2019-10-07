@@ -1,27 +1,30 @@
 import React, { Component } from 'react';
-import './comments.scss';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import './comments.scss';
+import classNames from 'classnames';
 import Comment from '../Comment/Comment';
 import TextForm from '../TextForm/TextForm';
+import {
+  addNewComment,
+  changeComment,
+  removeComment
+} from '../../reducers/comments/actions';
 
 class Comments extends Component {
-  static propTypes = {
-    changeComment: PropTypes.func.isRequired,
-    addNewComment: PropTypes.func.isRequired,
-    customClass: PropTypes.string,
-    comments: PropTypes.array
-  }
-  static defaultProps = {
-    customClass: '',
-    comments: []
-  }
   state = {
     isCommentWritten: false
   }
 
   handleAddCommentBtnClick = (value) => {
+    const {
+      visibleCardId,
+      userName,
+      addNewComment
+    } = this.props;
+
     if (value) {
-      this.props.addNewComment(value);
+      addNewComment(visibleCardId, userName, value);
     }
     
     this.setState({isCommentWritten: false});
@@ -37,18 +40,26 @@ class Comments extends Component {
     const {
       customClass,
       changeComment,
-      comments
+      removeComment,
+      comments,
+      visibleCardId
     } = this.props;
     const { isCommentWritten } = this.state;
+    const filteredComments = comments.filter(item => item.cardId === visibleCardId);
     const PLACEHOLDER = 'Напишите комментарий...';
 
     return (
-      <div className={`comments ${customClass}`}>
+      <div className={classNames(
+          'comments',
+          customClass,
+          {'comments--no-comments': !filteredComments.length}
+        )}
+      >
         <div 
-          className={`
-            comments__wrapper 
-            ${isCommentWritten ? 'comments__wrapper--active' : ''}
-          `}
+          className={classNames(
+            'comments__wrapper',
+            {'comments__wrapper--active': isCommentWritten}
+          )}
         >
           {!isCommentWritten
             ?
@@ -69,16 +80,17 @@ class Comments extends Component {
               />
           }
         </div>
-        {comments.length > 0 &&
+        {filteredComments.length > 0 &&
           <ul className="comments__list">
-            {[...comments].reverse().map(({ id, author, text }) => {
+            {[...filteredComments].reverse().map(({ id, author, text }) => {
               return (
                 <Comment
                   key={id}
                   author={author}
                   text={text}
                   closeWriteNewComment={this.closeWriteNewComment}
-                  changeComment={(isDelete, value) => changeComment(id, isDelete, value)}
+                  changeComment={value => changeComment(id, value)}
+                  removeComment={() => removeComment(id)}
                 />
               )
             })}
@@ -89,4 +101,32 @@ class Comments extends Component {
   }
 }
 
-export default Comments;
+Comments.propTypes = {
+  changeComment: PropTypes.func.isRequired,
+  addNewComment: PropTypes.func.isRequired,
+  visibleCardId: PropTypes.number.isRequired,
+  userName: PropTypes.string.isRequired,
+  customClass: PropTypes.string,
+  comments: PropTypes.array
+}
+
+Comments.defaultProps = {
+  customClass: '',
+  comments: []
+}
+
+const mapStateToProps = state => ({
+  userName: state.user.name,
+  comments: state.comments
+});
+
+const mapDispatchToProps = dispatch => ({
+  addNewComment: (id, author, value) => dispatch(addNewComment(id, author, value)),
+  changeComment: (id, value) => dispatch(changeComment(id, value)),
+  removeComment: id => dispatch(removeComment(id))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Comments);
