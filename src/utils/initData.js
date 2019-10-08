@@ -7,8 +7,10 @@ function initData (title) {
   if (incomingData) {
     data = incomingData;
   } else {
-    localStorage.setItem(title, JSON.stringify(DEFAULT_DATA[title] || []));
-    data = DEFAULT_DATA[title] || [];
+    const value = DEFAULT_DATA[title] || {};
+
+    localStorage.setItem(title, JSON.stringify(value));
+    data = value;
   }
 
   return data;

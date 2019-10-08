@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './column.scss';
-import TitleInput from '../TitleInput/TitleInput';
-import Card from '../Card/Card';
-import AddCard from '../AddCard/AddCard';
+import TitleInput from '../TitleInput';
+import Card from '../Card';
+import AddCard from '../AddCard';
 import { changeColumnTitle } from '../../reducers/columns/actions';
 
 class Column extends Component {
@@ -15,6 +15,10 @@ class Column extends Component {
       changeColumnTitle(id, value);
     }
   }
+
+  getNumberOfComments = (id) => {
+    return Object.values(this.props.comments).filter(item => item.cardId === id).length;
+  }
   
   render () {
     const {
@@ -22,11 +26,10 @@ class Column extends Component {
       title,
       cards,
       toggleCardDetailsVisibility,
-      comments,
       isAddCardOpened,
       toggleAddCardVisibility
     } = this.props;
-    const filteredCards = cards.filter(item => item.columnId === id);
+    const filteredCards = Object.values(cards).filter(item => item.columnId === id);
 
     return (
       <li className="column">
@@ -42,7 +45,7 @@ class Column extends Component {
                 <Card
                   key={id}
                   title={title}
-                  commentsLength={comments.filter(item => item.cardId === id).length}
+                  numberOfComments={this.getNumberOfComments(id)}
                   onClick={() => toggleCardDetailsVisibility(id)}
                 />
               )
@@ -66,16 +69,16 @@ Column.propTypes = {
   isAddCardOpened: PropTypes.bool,
   id: PropTypes.string,
   title: PropTypes.string,
-  comments: PropTypes.array,
-  cards: PropTypes.array
+  comments: PropTypes.object,
+  cards: PropTypes.object
 };
 
 Column.defaultProps = {
   isAddCardOpened: false,
   title: 'Неизвестная колонка',
   id: '',
-  comments: [],
-  cards: []
+  comments: {},
+  cards: {}
 };
 
 const mapStateToProps = state => ({

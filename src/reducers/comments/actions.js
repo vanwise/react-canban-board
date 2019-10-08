@@ -2,7 +2,7 @@ import {
   ADD_NEW_COMMENT,
   CHANGE_COMMENT,
   REMOVE_COMMENT
-} from './actionsTypes';
+} from './types';
 
 export const addNewComment = (cardId, author, value) => ({
   type: ADD_NEW_COMMENT,

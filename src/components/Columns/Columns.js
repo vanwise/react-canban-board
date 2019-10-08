@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './columns.scss';
-import Column from '../Column/Column';
+import Column from '../Column';
 
 class Columns extends Component {
   state = {
@@ -21,14 +21,15 @@ class Columns extends Component {
       columns,
       toggleCardDetailsVisibility
     } = this.props;
+    const columnsArray = Object.values(columns);
 
-    if (!columns.length) {
+    if (!columnsArray.length) {
       return null;
     }
 
     return (
       <ul className="columns">
-        {columns.map(({ id, title }) => {
+        {columnsArray.map(({ id, title }) => {
           return(
             <Column
               key={id}
@@ -47,11 +48,11 @@ class Columns extends Component {
 
 Columns.propTypes = {
   toggleCardDetailsVisibility: PropTypes.func.isRequired,
-  columns: PropTypes.array
+  columns: PropTypes.object
 };
 
 Columns.defaultProps = {
-  columns: []
+  columns: {}
 }
 
 const mapStateToProps = state => ({

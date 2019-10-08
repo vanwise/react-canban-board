@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './card-details.scss';
-import TitleInput from '../TitleInput/TitleInput';
-import Desc from '../Desc/Desc';
-import Comments from '../Comments/Comments';
-import CloseBtn from '../CloseBtn/CloseBtn';
+import TitleInput from '../TitleInput';
+import Desc from '../Desc';
+import Comments from '../Comments';
+import CloseBtn from '../CloseBtn';
 import KEY_CODES from '../../utils/keyCodes';
 import { changeCardProp, removeCard } from '../../reducers/cards/actions';
 
@@ -42,7 +42,7 @@ class CardDetails extends Component {
       changeCardProp,
       onCloseBtnClick
     } = this.props;
-    const currentCard = cards.find(item => item.id === visibleCardId) || {};
+    const currentCard = cards[visibleCardId];
 
     return (
       <div className="card-details">
@@ -52,7 +52,7 @@ class CardDetails extends Component {
           onBlur={value => changeCardProp(visibleCardId, 'title', value)}
         />
         <p className="card-details__column-title">
-          В колонке {(columns.find(item => item.id === currentCard.columnId) || {}).title}
+          В колонке {columns[currentCard.columnId].title}
         </p>
         <p className="card-details__author">
           Автор карточки: {currentCard.author}
@@ -87,13 +87,13 @@ CardDetails.propTypes = {
   changeCardProp: PropTypes.func.isRequired,
   removeCard: PropTypes.func.isRequired,
   visibleCardId: PropTypes.number.isRequired,
-  cards: PropTypes.array,
-  columns: PropTypes.array
+  cards: PropTypes.object,
+  columns: PropTypes.object
 }
 
 CardDetails.defaultProps = {
-  cards: [],
-  columns: []
+  cards: {},
+  columns: {}
 }
 
 const mapStateToProps = state => ({

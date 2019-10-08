@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './card.scss';
 
 function Card ({
-    commentsLength=0,
+    numberOfComments=0,
     onClick,
     title
   }) {
@@ -17,7 +17,7 @@ function Card ({
         {title}
       </h3>
       <span className="card__comments-count">
-        {commentsLength}
+        {numberOfComments}
       </span>
     </li>
   )
@@ -26,7 +26,7 @@ function Card ({
 Card.propTypes = {
   onClick: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  commentsLength: PropTypes.number
+  numberOfComments: PropTypes.number
 }
 
 export default Card;

@@ -2,7 +2,7 @@ import {
   ADD_NEW_CARD,
   CHANGE_CARD_PROP,
   REMOVE_CARD
-} from './actionsTypes';
+} from './types';
 
 export const addNewCard = (columnId, author, value) => ({
   type: ADD_NEW_CARD,

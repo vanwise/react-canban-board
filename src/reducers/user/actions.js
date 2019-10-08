@@ -1,6 +1,8 @@
-import { SET_USER_NAME } from './actionsTypes';
+import { SET_USER_NAME } from './types';
 
 export const setUserName = value => ({
   type: SET_USER_NAME,
-  payload: value
+  payload: {
+    name: value
+  }
 });

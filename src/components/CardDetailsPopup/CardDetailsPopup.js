@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Popup from '../Popup/Popup';
-import CardDetails from '../CardDetails/CardDetails';
+import Popup from '../Popup';
+import CardDetails from '../CardDetails';
 
 function CardDetailsPopup ({
   visibleCardId=null,

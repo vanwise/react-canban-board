@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './text-form.scss';
 import classNames from 'classnames';
-import CloseBtn from '../CloseBtn/CloseBtn';
+import CloseBtn from '../CloseBtn';
 import KEY_CODES from '../../utils/keyCodes';
 
 class TextForm extends Component  {

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './app.scss';
-import Columns from '../Columns/Columns';
-import CardDetailsPopup from '../CardDetailsPopup/CardDetailsPopup';
-import UserPopup from '../UserPopup/UserPopup';
+import Columns from './components/Columns/Columns';
+import CardDetailsPopup from './components/CardDetailsPopup/CardDetailsPopup';
+import UserPopup from './components/UserPopup/UserPopup';
 
 class App extends Component {
   state = {

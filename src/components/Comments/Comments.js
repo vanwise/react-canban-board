@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './comments.scss';
 import classNames from 'classnames';
-import Comment from '../Comment/Comment';
-import TextForm from '../TextForm/TextForm';
+import Comment from '../Comment';
+import TextForm from '../TextForm';
 import {
   addNewComment,
   changeComment,
@@ -45,7 +45,7 @@ class Comments extends Component {
       visibleCardId
     } = this.props;
     const { isCommentWritten } = this.state;
-    const filteredComments = comments.filter(item => item.cardId === visibleCardId);
+    const filteredComments = Object.values(comments).filter(item => item.cardId === visibleCardId);
     const PLACEHOLDER = 'Напишите комментарий...';
 
     return (
@@ -107,12 +107,12 @@ Comments.propTypes = {
   visibleCardId: PropTypes.number.isRequired,
   userName: PropTypes.string.isRequired,
   customClass: PropTypes.string,
-  comments: PropTypes.array
+  comments: PropTypes.object
 }
 
 Comments.defaultProps = {
   customClass: '',
-  comments: []
+  comments: {}
 }
 
 const mapStateToProps = state => ({

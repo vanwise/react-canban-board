@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './desc.scss';
 import classNames from 'classnames';
-import TextForm from '../TextForm/TextForm';
+import TextForm from '../TextForm';
 
 class CardDesc extends Component {
   state = {

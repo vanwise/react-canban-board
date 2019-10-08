@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './add-card.scss';
-import TextForm from '../TextForm/TextForm';
+import TextForm from '../TextForm';
 import { addNewCard } from '../../reducers/cards/actions';
 
 class AddCard extends Component {

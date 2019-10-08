@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Popup from '../Popup/Popup';
-import UserForm from '../UserForm/UserForm';
+import Popup from '../Popup';
+import UserForm from '../UserForm';
 import { setUserName } from '../../reducers/user/actions';
 
 function UserPopup ({ userName='', setUserName }) {

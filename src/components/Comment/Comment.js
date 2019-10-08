@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './comment.scss';
 import classNames from 'classnames';
-import TextForm from '../TextForm/TextForm';
+import TextForm from '../TextForm';
 
 class Comment extends Component {
   state = {
